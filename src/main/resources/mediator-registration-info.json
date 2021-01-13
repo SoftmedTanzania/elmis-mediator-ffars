@@ -5,25 +5,54 @@
   "description": "An openHIM mediator for handling integration of data from FFARS to eLMIS systems",
   "endpoints": [
     {
-      "name": "eLMIS-Mediator-FFARS Route",
+      "name": "eLMIS Actual Balance Route",
       "host": "localhost",
       "port": "3002",
-      "path": "/elmis",
+      "path": "/elmis/actual_balance",
+      "type": "http"
+    },
+    {
+      "name": "eLMIS Health Fund Sources Route",
+      "host": "localhost",
+      "port": "3002",
+      "path": "/elmis/health_fund_sources",
       "type": "http"
     }
   ],
   "defaultChannelConfig": [
     {
-      "name": "eLMIS-Mediator-FFARS",
-      "urlPattern": "^/elmis$",
+      "name": "eLMIS Actual Balance Channel",
+      "urlPattern": "^/actual_balance$",
+      "description": "An openHIM channel for handling sharing of Actual Balance data from FFARS to eLMIS.",
       "type": "http",
-      "allow": ["elmis-mediator-ffars"],
+      "allow": [
+        "elmis-mediator-ffars"
+      ],
       "routes": [
         {
-          "name": "eLMIS-Mediator-FFARS Route",
+          "name": "eLMIS Actual Balance Route",
           "host": "localhost",
           "port": "3002",
-          "path": "/elmis",
+          "path": "/elmis/actual_balance",
+          "type": "http",
+          "primary": "true"
+        }
+      ]
+    },
+    {
+      "name": "eLMIS Health Fund Sources Channel",
+      "urlPattern": "^/health_fund_sources$",
+      "description": "An openHIM channel for handling sharing of Health Fund Sources from FFARS to eLMIS.",
+      "type": "http",
+      "allow": [
+        "elmis-mediator-ffars"
+      ],
+      "routes": [
+        {
+          "name": "eLMIS Health Fund Sources Route",
+          "host": "localhost",
+          "port": "3002",
+          "path": "/elmis/health_fund_sources",
           "type": "http",
           "primary": "true"
         }
