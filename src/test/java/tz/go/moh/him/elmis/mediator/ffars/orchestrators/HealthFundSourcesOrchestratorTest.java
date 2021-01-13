@@ -51,7 +51,7 @@ public class HealthFundSourcesOrchestratorTest extends BaseOrchestratorTest {
 
             InputStream stream = HealthFundSourcesOrchestratorTest.class.getClassLoader().getResourceAsStream("health_fund_source_request.json");
 
-            Assert.assertNotNull(stream);
+            assertNotNull(stream);
 
             MediatorHTTPRequest request = new MediatorHTTPRequest(
                     getRef(),

@@ -51,7 +51,7 @@ public class ActualBalanceOrchestratorTest extends BaseOrchestratorTest {
 
             InputStream stream = ActualBalanceOrchestratorTest.class.getClassLoader().getResourceAsStream("actual_balance_request.json");
 
-            Assert.assertNotNull(stream);
+            assertNotNull(stream);
 
             MediatorHTTPRequest request = new MediatorHTTPRequest(
                     getRef(),
