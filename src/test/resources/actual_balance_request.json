@@ -1,0 +1,20 @@
+{
+  "UID": "4590",
+  "facilityCode": "newFac",
+  "periodStartDate": "2018/05/01",
+  "sourceApplication": "FFARS",
+  "lineItem": [
+    {
+      "allocatedBudget": 50000,
+      "additive": true,
+      "fundSourceCode": "30D",
+      "notes": ""
+    },
+    {
+      "allocatedBudget": 7000,
+      "additive": true,
+      "fundSourceCode": "NHIF",
+      "notes": ""
+    }
+  ]
+}

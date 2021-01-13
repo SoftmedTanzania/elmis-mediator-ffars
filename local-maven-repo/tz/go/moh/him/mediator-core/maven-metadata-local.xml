@@ -4,8 +4,8 @@
   <artifactId>mediator-core</artifactId>
   <versioning>
     <versions>
-      <version>0.1-SNAPSHOT</version>
+      <version>0.1.1-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20210106045105</lastUpdated>
+    <lastUpdated>20210111094800</lastUpdated>
   </versioning>
 </metadata>
