@@ -126,7 +126,7 @@ public class HealthFundSourcesOrchestratorTest extends BaseOrchestratorTest {
         public void executeOnReceive(MediatorHTTPRequest msg) {
             InputStream stream = HealthFundSourcesOrchestrator.class.getClassLoader().getResourceAsStream("health_fund_source_request.json");
 
-            Assert.assertNotNull(stream);
+            assertNotNull(stream);
 
             Gson gson = new Gson();
 

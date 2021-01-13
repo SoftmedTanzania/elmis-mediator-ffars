@@ -82,7 +82,7 @@ public class BaseOrchestratorTest {
                 config.setProperties("mediator.properties");
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // TODO: handle this issue
         }
 
         config.setName(config.getProperty("mediator.name"));

@@ -126,7 +126,7 @@ public class ActualBalanceOrchestratorTest extends BaseOrchestratorTest {
         public void executeOnReceive(MediatorHTTPRequest msg) {
             InputStream stream = ActualBalanceOrchestrator.class.getClassLoader().getResourceAsStream("actual_balance_request.json");
 
-            Assert.assertNotNull(stream);
+            assertNotNull(stream);
 
             Gson gson = new Gson();
 
