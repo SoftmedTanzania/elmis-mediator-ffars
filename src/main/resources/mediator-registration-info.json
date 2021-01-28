@@ -17,6 +17,13 @@
       "port": "3002",
       "path": "/elmis/health_fund_sources",
       "type": "http"
+    },
+    {
+      "name": "Epicor9 Other Fund Sources Route",
+      "host": "localhost",
+      "port": "3002",
+      "path": "/epicor9/other_fund_sources",
+      "type": "http"
     }
   ],
   "defaultChannelConfig": [
@@ -53,6 +60,25 @@
           "host": "localhost",
           "port": "3002",
           "path": "/elmis/health_fund_sources",
+          "type": "http",
+          "primary": "true"
+        }
+      ]
+    },
+    {
+      "name": "Epicor9 Other Fund Sources Channel",
+      "urlPattern": "^/other_fund_sources$",
+      "description": "An openHIM channel for handling sharing of Other Fund Sources from FFARS to Epicor9.",
+      "type": "http",
+      "allow": [
+        "elmis-mediator-ffars"
+      ],
+      "routes": [
+        {
+          "name": "Epicor9 Other Fund Sources Route",
+          "host": "localhost",
+          "port": "3002",
+          "path": "/epicor9/other_fund_sources",
           "type": "http",
           "primary": "true"
         }
