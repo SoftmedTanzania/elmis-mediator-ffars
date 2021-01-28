@@ -23,9 +23,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Represents unit tests for the {@link HealthFundSourcesOrchestrator} class.
+ * Represents unit tests for the {@link OtherFundSourcesOrchestrator} class.
  */
-public class HealthFundSourcesOrchestratorTest extends BaseOrchestratorTest {
+public class OtherFundSourcesOrchestratorTest extends BaseOrchestratorTest {
 
     /**
      * Runs initialization before test execution.
@@ -35,21 +35,21 @@ public class HealthFundSourcesOrchestratorTest extends BaseOrchestratorTest {
         super.before();
 
         List<MockLauncher.ActorToLaunch> toLaunch = new LinkedList<>();
-        toLaunch.add(new MockLauncher.ActorToLaunch("http-connector", MockElmis.class));
+        toLaunch.add(new MockLauncher.ActorToLaunch("http-connector", MockEpicor9.class));
         TestingUtils.launchActors(system, configuration.getName(), toLaunch);
     }
 
     /**
-     * Performs health fund source HTTP request test
+     * Performs other fund source HTTP request test
      */
     @Test
-    public void testHealthFundSourceHTTPRequest() throws Exception {
+    public void testOtherFundSourceHTTPRequest() throws Exception {
         assertNotNull(configuration);
 
         new JavaTestKit(system) {{
-            final ActorRef orchestrator = system.actorOf(Props.create(HealthFundSourcesOrchestrator.class, configuration));
+            final ActorRef orchestrator = system.actorOf(Props.create(OtherFundSourcesOrchestrator.class, configuration));
 
-            InputStream stream = HealthFundSourcesOrchestratorTest.class.getClassLoader().getResourceAsStream("fund_source_request.json");
+            InputStream stream = OtherFundSourcesOrchestratorTest.class.getClassLoader().getResourceAsStream("fund_source_request.json");
 
             assertNotNull(stream);
 
@@ -61,7 +61,7 @@ public class HealthFundSourcesOrchestratorTest extends BaseOrchestratorTest {
                     "http",
                     null,
                     null,
-                    configuration.getProperty("elmis.api.health_fund_sources.path"),
+                    configuration.getProperty("epicor9.api.other_fund_sources.path"),
                     IOUtils.toString(stream),
                     Collections.singletonMap("Content-Type", "application/json"),
                     Collections.emptyList()
@@ -84,9 +84,9 @@ public class HealthFundSourcesOrchestratorTest extends BaseOrchestratorTest {
     }
 
     /**
-     * Represents a mock class for the eLMIS system.
+     * Represents a mock class for the Epicor9 system.
      */
-    private static class MockElmis extends MockHTTPConnector {
+    private static class MockEpicor9 extends MockHTTPConnector {
         /**
          * Gets the response.
          *
@@ -124,7 +124,7 @@ public class HealthFundSourcesOrchestratorTest extends BaseOrchestratorTest {
          */
         @Override
         public void executeOnReceive(MediatorHTTPRequest msg) {
-            InputStream stream = HealthFundSourcesOrchestrator.class.getClassLoader().getResourceAsStream("fund_source_request.json");
+            InputStream stream = OtherFundSourcesOrchestrator.class.getClassLoader().getResourceAsStream("fund_source_request.json");
 
             assertNotNull(stream);
 

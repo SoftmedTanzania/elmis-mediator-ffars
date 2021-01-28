@@ -64,7 +64,7 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
         InputStream stream = getClass().getClassLoader().getResourceAsStream("error-messages.json");
         try {
             if (stream != null) {
-                errorMessageResource = new JSONObject(IOUtils.toString(stream)).getJSONObject("HEALTH_FUND_SOURCES_ERROR_MESSAGES");
+                errorMessageResource = new JSONObject(IOUtils.toString(stream)).getJSONObject("FUND_SOURCES_ERROR_MESSAGES");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -145,11 +145,11 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
                 FinishRequest finishRequest = new FinishRequest(new Gson().toJson(errorMessages), "text/json", HttpStatus.SC_BAD_REQUEST);
                 (originalRequest).getRequestHandler().tell(finishRequest, getSelf());
             } else {
-                sendDataToElmis(originalRequest.getBody());
+                sendDataToTargetSystem(originalRequest.getBody());
             }
 
         } else if (msg instanceof MediatorHTTPResponse) { //respond
-            log.info("Received response from eLMIS");
+            log.info("Received response from target system");
             (originalRequest).getRequestHandler().tell(((MediatorHTTPResponse) msg).toFinishRequest(), getSelf());
         } else {
             unhandled(msg);
@@ -161,7 +161,7 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
      *
      * @param msg to be sent
      */
-    private void sendDataToElmis(String msg) {
+    protected void sendDataToTargetSystem(String msg) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 

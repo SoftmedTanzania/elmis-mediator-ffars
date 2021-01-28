@@ -42,7 +42,7 @@ public class FundSourceTest {
      */
     @Test
     public void testFundSourceDeserialization() throws Exception {
-        InputStream stream = FundSourceTest.class.getClassLoader().getResourceAsStream("health_fund_source_request.json");
+        InputStream stream = FundSourceTest.class.getClassLoader().getResourceAsStream("fund_source_request.json");
         Assert.assertNotNull(stream);
 
         FundSource fundSource = new Gson().fromJson(IOUtils.toString(stream), FundSource.class);
