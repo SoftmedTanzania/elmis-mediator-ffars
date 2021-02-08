@@ -61,7 +61,51 @@ public class OtherFundSourcesOrchestratorTest extends BaseOrchestratorTest {
                     "http",
                     null,
                     null,
-                    configuration.getProperty("epicor9.api.other_fund_sources.path"),
+                    configuration.getProperty("epicor9.other_fund_sources.path"),
+                    IOUtils.toString(stream),
+                    Collections.singletonMap("Content-Type", "application/json"),
+                    Collections.emptyList()
+            );
+
+            orchestrator.tell(request, getRef());
+
+            final Object[] out = new ReceiveWhile<Object>(Object.class, duration("3 seconds")) {
+                @Override
+                protected Object match(Object msg) {
+                    if (msg instanceof FinishRequest) {
+                        return msg;
+                    }
+                    throw noMatch();
+                }
+            }.get();
+
+            Assert.assertTrue(Arrays.stream(out).anyMatch(c -> c instanceof FinishRequest));
+        }};
+    }
+
+    /**
+     * Performs an invalid other fund source HTTP request test
+     */
+    @Test
+    public void testInvalidOtherFundSourceHTTPRequest() throws Exception {
+        assertNotNull(configuration);
+
+        new JavaTestKit(system) {{
+            final ActorRef orchestrator = system.actorOf(Props.create(OtherFundSourcesOrchestrator.class, configuration));
+
+            InputStream stream = OtherFundSourcesOrchestratorTest.class.getClassLoader().getResourceAsStream("fund_source_invalid_request.json");
+
+            assertNotNull(stream);
+
+            MediatorHTTPRequest request = new MediatorHTTPRequest(
+                    getRef(),
+                    getRef(),
+                    "unit-test",
+                    "POST",
+                    "http",
+                    null,
+                    null,
+                    configuration.getProperty("epicor9.other_fund_sources.path"),
                     IOUtils.toString(stream),
                     Collections.singletonMap("Content-Type", "application/json"),
                     Collections.emptyList()

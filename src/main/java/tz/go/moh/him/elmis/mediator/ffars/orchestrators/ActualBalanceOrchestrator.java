@@ -5,6 +5,7 @@ import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import com.google.gson.Gson;
+import org.apache.commons.codec.binary.Base64;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -169,25 +170,58 @@ public class ActualBalanceOrchestrator extends UntypedActor {
      * @param msg to be sent
      */
     private void sendDataToElmis(String msg) {
+        log.debug("Forwarding request to eLMIS");
+
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 
+        String host;
+        int port;
+        String path;
         String scheme;
-        if (config.getProperty("elmis.secure").equals("true")) {
-            scheme = "https";
+
+        if (config.getDynamicConfig().isEmpty()) {
+            log.debug("Dynamic config is empty, using config from mediator.properties");
+
+            host = config.getProperty("elmis.host");
+            port = Integer.parseInt(config.getProperty("elmis.port"));
+            path = config.getProperty("elmis.actual_balance.path");
+
+            if (config.getProperty("elmis.secure").equals("true")) {
+                scheme = "https";
+            } else {
+                scheme = "http";
+            }
         } else {
-            scheme = "http";
+            log.debug("Using dynamic config");
+
+            JSONObject connectionProperties = new JSONObject(config.getDynamicConfig()).getJSONObject("elmisConnectionProperties");
+
+            host = connectionProperties.getString("elmisHost");
+            port = connectionProperties.getInt("elmisPort");
+            path = connectionProperties.getString("elmisActualBalancePath");
+            scheme = connectionProperties.getString("elmisScheme");
+
+            String username = connectionProperties.getString("elmisUsername");
+            String password = connectionProperties.getString("elmisPassword");
+
+            // if we have a username and a password
+            // we want to add the username and password as the Basic Auth header in the HTTP request
+            if (username != null && !"".equals(username) && password != null && !"".equals(password))
+            {
+                headers.put("Authorization", "Basic " + Base64.encodeBase64URLSafeString((username + ":" + password).getBytes()));
+            }
         }
 
         List<Pair<String, String>> params = new ArrayList<>();
 
         MediatorHTTPRequest forwardToElmisRequest = new MediatorHTTPRequest(
-                (originalRequest).getRequestHandler(), getSelf(), "Sending Actual Balance to eLMIS", "POST", scheme,
-                config.getProperty("elmis.host"), Integer.parseInt(config.getProperty("elmis.api.port")), config.getProperty("elmis.api.actual_balance.path"),
-                msg, headers, params
+                (originalRequest).getRequestHandler(), getSelf(), "Sending Actual Balance to eLMIS", "POST", scheme, host, port, path, msg, headers, params
         );
 
         ActorSelection httpConnector = getContext().actorSelection(config.userPathFor("http-connector"));
         httpConnector.tell(forwardToElmisRequest, getSelf());
+
+        log.debug("Request forwarded to eLMIS");
     }
 }

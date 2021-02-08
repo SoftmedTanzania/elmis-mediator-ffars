@@ -41,7 +41,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>tz.go.moh.him.elmis.mediator.e9.MediatorMain</mainClass>
+                                    <mainClass>tz.go.moh.him.elmis.mediator.ffars.MediatorMain</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

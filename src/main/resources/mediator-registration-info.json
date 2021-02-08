@@ -1,8 +1,8 @@
 {
   "urn": "urn:uuid:ea6e9250-4fd7-11eb-a664-616443591cdc",
   "version": "0.1.0",
-  "name": "eLMIS-Mediator-FFARS",
-  "description": "An openHIM mediator for handling integration of data from FFARS to eLMIS systems",
+  "name": "FFARS to eLMIS Mediator",
+  "description": "An OpenHIM mediator for handling integration of data from FFARS to eLMIS systems",
   "endpoints": [
     {
       "name": "eLMIS Actual Balance Route",
@@ -17,23 +17,19 @@
       "port": "3002",
       "path": "/elmis/health_fund_sources",
       "type": "http"
-    },
-    {
-      "name": "Epicor9 Other Fund Sources Route",
-      "host": "localhost",
-      "port": "3002",
-      "path": "/epicor9/other_fund_sources",
-      "type": "http"
     }
   ],
   "defaultChannelConfig": [
     {
       "name": "eLMIS Actual Balance Channel",
       "urlPattern": "^/actual_balance$",
-      "description": "An openHIM channel for handling sharing of Actual Balance data from FFARS to eLMIS.",
+      "description": "An OpenHIM channel for handling sharing of Actual Balance data from FFARS to eLMIS.",
       "type": "http",
       "allow": [
-        "elmis-mediator-ffars"
+        "ffars-role"
+      ],
+      "methods": [
+        "POST"
       ],
       "routes": [
         {
@@ -49,10 +45,13 @@
     {
       "name": "eLMIS Health Fund Sources Channel",
       "urlPattern": "^/health_fund_sources$",
-      "description": "An openHIM channel for handling sharing of Health Fund Sources from FFARS to eLMIS.",
+      "description": "An OpenHIM channel for handling sharing of Health Fund Sources from FFARS to eLMIS.",
       "type": "http",
       "allow": [
-        "elmis-mediator-ffars"
+        "ffars-role"
+      ],
+      "methods": [
+        "POST"
       ],
       "routes": [
         {
@@ -64,23 +63,60 @@
           "primary": "true"
         }
       ]
-    },
+    }
+  ],
+  "configDefs": [
     {
-      "name": "Epicor9 Other Fund Sources Channel",
-      "urlPattern": "^/other_fund_sources$",
-      "description": "An openHIM channel for handling sharing of Other Fund Sources from FFARS to Epicor9.",
-      "type": "http",
-      "allow": [
-        "elmis-mediator-ffars"
-      ],
-      "routes": [
+      "param": "elmisConnectionProperties",
+      "displayName": "eLMIS Connection Properties",
+      "description": "Configuration to set the hostname, port and path for the eLMIS server",
+      "type": "struct",
+      "template": [
         {
-          "name": "Epicor9 Other Fund Sources Route",
-          "host": "localhost",
-          "port": "3002",
-          "path": "/epicor9/other_fund_sources",
-          "type": "http",
-          "primary": "true"
+          "param": "elmisHost",
+          "displayName": "eLMIS Host Name",
+          "description": "IP address/hostname of the eLMIS server. e.g 192.168.1.1",
+          "type": "string"
+        },
+        {
+          "param": "elmisPort",
+          "displayName": "eLMIS Port Number",
+          "description": "The port number of the eLMIS server. e.g 8080",
+          "type": "number"
+        },
+        {
+          "param": "elmisActualBalancePath",
+          "displayName": "eLMIS Actual Balance Path",
+          "description": "The eLMIS server's Actual Balance path for receiving of data from the HIM. eg /elmis",
+          "type": "string"
+        },
+        {
+          "param": "elmisFundSourcesPath",
+          "displayName": "eLMIS Health Fund Sources Path",
+          "description": "The eLMIS server's Health Fund Sources path for receiving of data from the HIM. eg /elmis",
+          "type": "string"
+        },
+        {
+          "param": "elmisScheme",
+          "displayName": "eLMIS Scheme",
+          "description": "Whether the eLMIS server is using HTTP or HTTPS requests",
+          "type": "option",
+          "values": [
+            "http",
+            "https"
+          ]
+        },
+        {
+          "param": "elmisUsername",
+          "displayName": "eLMIS Username",
+          "description": "The eLMIS server's username for receiving data from the HIM.",
+          "type": "string"
+        },
+        {
+          "param": "elmisPassword",
+          "displayName": "eLMIS Password",
+          "description": "The eLMIS server' password for receiving data from the HIM.",
+          "type": "password"
         }
       ]
     }
