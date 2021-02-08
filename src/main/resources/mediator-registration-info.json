@@ -105,6 +105,18 @@
             "http",
             "https"
           ]
+        },
+        {
+          "param": "elmisUsername",
+          "displayName": "eLMIS Username",
+          "description": "The eLMIS server's username for receiving data from the HIM.",
+          "type": "string"
+        },
+        {
+          "param": "elmisPassword",
+          "displayName": "eLMIS Password",
+          "description": "The eLMIS server' password for receiving data from the HIM.",
+          "type": "password"
         }
       ]
     }

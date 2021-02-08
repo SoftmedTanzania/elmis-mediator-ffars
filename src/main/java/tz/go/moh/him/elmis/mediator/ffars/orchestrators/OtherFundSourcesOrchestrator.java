@@ -1,6 +1,7 @@
 package tz.go.moh.him.elmis.mediator.ffars.orchestrators;
 
 import akka.actor.ActorSelection;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
 import org.openhim.mediator.engine.MediatorConfig;
@@ -61,6 +62,16 @@ public class OtherFundSourcesOrchestrator extends HealthFundSourcesOrchestrator 
             port = connectionProperties.getInt("epicor9Port");
             path = connectionProperties.getString("epicor9FundSourcesPath");
             scheme = connectionProperties.getString("epicor9Scheme");
+
+            String username = connectionProperties.getString("epicor9Username");
+            String password = connectionProperties.getString("epicor9Password");
+
+            // if we have a username and a password
+            // we want to add the username and password as the Basic Auth header in the HTTP request
+            if (username != null && !"".equals(username) && password != null && !"".equals(password))
+            {
+                headers.put("Authorization", "Basic " + Base64.encodeBase64URLSafeString((username + ":" + password).getBytes()));
+            }
         }
 
         List<Pair<String, String>> params = new ArrayList<>();
