@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "name": "eLMIS-Mediator-FFARS",
   "description": "An openHIM mediator for handling integration of data from FFARS to eLMIS systems",
+  "name": "FFARS to eLMIS Mediator",
+  "description": "An OpenHIM mediator for handling integration of data from FFARS to eLMIS systems",
   "endpoints": [
     {
       "name": "eLMIS Actual Balance Route",
@@ -31,9 +33,14 @@
       "name": "eLMIS Actual Balance Channel",
       "urlPattern": "^/actual_balance$",
       "description": "An openHIM channel for handling sharing of Actual Balance data from FFARS to eLMIS.",
+      "description": "An OpenHIM channel for handling sharing of Actual Balance data from FFARS to eLMIS.",
       "type": "http",
       "allow": [
         "elmis-mediator-ffars"
+        "ffars-role"
+      ],
+      "methods": [
+        "POST"
       ],
       "routes": [
         {
@@ -50,9 +57,14 @@
       "name": "eLMIS Health Fund Sources Channel",
       "urlPattern": "^/health_fund_sources$",
       "description": "An openHIM channel for handling sharing of Health Fund Sources from FFARS to eLMIS.",
+      "description": "An OpenHIM channel for handling sharing of Health Fund Sources from FFARS to eLMIS.",
       "type": "http",
       "allow": [
         "elmis-mediator-ffars"
+        "ffars-role"
+      ],
+      "methods": [
+        "POST"
       ],
       "routes": [
         {
@@ -60,25 +72,6 @@
           "host": "localhost",
           "port": "3002",
           "path": "/elmis/health_fund_sources",
-          "type": "http",
-          "primary": "true"
-        }
-      ]
-    },
-    {
-      "name": "Epicor9 Other Fund Sources Channel",
-      "urlPattern": "^/other_fund_sources$",
-      "description": "An openHIM channel for handling sharing of Other Fund Sources from FFARS to Epicor9.",
-      "type": "http",
-      "allow": [
-        "elmis-mediator-ffars"
-      ],
-      "routes": [
-        {
-          "name": "Epicor9 Other Fund Sources Route",
-          "host": "localhost",
-          "port": "3002",
-          "path": "/epicor9/other_fund_sources",
           "type": "http",
           "primary": "true"
         }
