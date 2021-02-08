@@ -2,6 +2,7 @@ package tz.go.moh.him.elmis.mediator.ffars.orchestrators;
 
 import akka.actor.ActorSelection;
 import org.apache.commons.lang3.tuple.Pair;
+import org.json.JSONObject;
 import org.openhim.mediator.engine.MediatorConfig;
 import org.openhim.mediator.engine.messages.MediatorHTTPRequest;
 
@@ -34,19 +35,38 @@ public class OtherFundSourcesOrchestrator extends HealthFundSourcesOrchestrator 
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 
+        String host;
+        int port;
+        String path;
         String scheme;
-        if (config.getProperty("epicor9.secure").equals("true")) {
-            scheme = "https";
+
+        if (config.getDynamicConfig().isEmpty()) {
+            log.debug("Dynamic config is empty, using config from mediator.properties");
+
+            host = config.getProperty("epicor9.host");
+            port = Integer.parseInt(config.getProperty("epicor9.port"));
+            path = config.getProperty("epicor9.other_fund_sources.path");
+
+            if (config.getProperty("epicor9.secure").equals("true")) {
+                scheme = "https";
+            } else {
+                scheme = "http";
+            }
         } else {
-            scheme = "http";
+            log.debug("Using dynamic config");
+
+            JSONObject connectionProperties = new JSONObject(config.getDynamicConfig()).getJSONObject("epicor9ConnectionProperties");
+
+            host = connectionProperties.getString("epicor9Host");
+            port = connectionProperties.getInt("epicor9Port");
+            path = connectionProperties.getString("epicor9FundSourcesPath");
+            scheme = connectionProperties.getString("epicor9Scheme");
         }
 
         List<Pair<String, String>> params = new ArrayList<>();
 
         MediatorHTTPRequest forwardToEpicorRequest = new MediatorHTTPRequest(
-                (originalRequest).getRequestHandler(), getSelf(), "Sending Other Fund Sources to Epicor9", "POST", scheme,
-                config.getProperty("epicor9.host"), Integer.parseInt(config.getProperty("epicor9.api.port")), config.getProperty("epicor9.api.other_fund_sources.path"),
-                msg, headers, params
+                (originalRequest).getRequestHandler(), getSelf(), "Sending Other Fund Sources to Epicor9", "POST", scheme, host, port, path, msg, headers, params
         );
 
         ActorSelection httpConnector = getContext().actorSelection(config.userPathFor("http-connector"));

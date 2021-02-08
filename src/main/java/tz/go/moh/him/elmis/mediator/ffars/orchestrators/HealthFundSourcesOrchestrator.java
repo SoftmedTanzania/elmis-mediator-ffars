@@ -165,19 +165,38 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 
+        String host;
+        int port;
+        String path;
         String scheme;
-        if (config.getProperty("elmis.secure").equals("true")) {
-            scheme = "https";
+
+        if (config.getDynamicConfig().isEmpty()) {
+            log.debug("Dynamic config is empty, using config from mediator.properties");
+
+            host = config.getProperty("elmis.host");
+            port = Integer.parseInt(config.getProperty("elmis.port"));
+            path = config.getProperty("elmis.health_fund_sources.path");
+
+            if (config.getProperty("elmis.secure").equals("true")) {
+                scheme = "https";
+            } else {
+                scheme = "http";
+            }
         } else {
-            scheme = "http";
+            log.debug("Using dynamic config");
+
+            JSONObject connectionProperties = new JSONObject(config.getDynamicConfig()).getJSONObject("elmisConnectionProperties");
+
+            host = connectionProperties.getString("elmisHost");
+            port = connectionProperties.getInt("elmisPort");
+            path = connectionProperties.getString("elmisFundSourcesPath");
+            scheme = connectionProperties.getString("elmisScheme");
         }
 
         List<Pair<String, String>> params = new ArrayList<>();
 
         MediatorHTTPRequest forwardToElmisRequest = new MediatorHTTPRequest(
-                (originalRequest).getRequestHandler(), getSelf(), "Sending Health Fund Sources to eLMIS", "POST", scheme,
-                config.getProperty("elmis.host"), Integer.parseInt(config.getProperty("elmis.api.port")), config.getProperty("elmis.api.health_fund_sources.path"),
-                msg, headers, params
+                (originalRequest).getRequestHandler(), getSelf(), "Sending Health Fund Sources to eLMIS", "POST", scheme, host, port, path, msg, headers, params
         );
 
         ActorSelection httpConnector = getContext().actorSelection(config.userPathFor("http-connector"));
