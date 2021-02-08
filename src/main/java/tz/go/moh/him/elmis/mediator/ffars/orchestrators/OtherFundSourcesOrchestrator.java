@@ -33,6 +33,8 @@ public class OtherFundSourcesOrchestrator extends HealthFundSourcesOrchestrator 
      */
     @Override
     protected void sendDataToTargetSystem(String msg) {
+        log.debug("Forwarding request to Epicor9");
+
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 
@@ -82,5 +84,7 @@ public class OtherFundSourcesOrchestrator extends HealthFundSourcesOrchestrator 
 
         ActorSelection httpConnector = getContext().actorSelection(config.userPathFor("http-connector"));
         httpConnector.tell(forwardToEpicorRequest, getSelf());
+
+        log.debug("Request forwarded to Epicor9");
     }
 }

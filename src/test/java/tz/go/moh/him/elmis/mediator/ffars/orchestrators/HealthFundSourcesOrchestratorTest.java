@@ -61,7 +61,51 @@ public class HealthFundSourcesOrchestratorTest extends BaseOrchestratorTest {
                     "http",
                     null,
                     null,
-                    configuration.getProperty("elmis.api.health_fund_sources.path"),
+                    configuration.getProperty("elmis.health_fund_sources.path"),
+                    IOUtils.toString(stream),
+                    Collections.singletonMap("Content-Type", "application/json"),
+                    Collections.emptyList()
+            );
+
+            orchestrator.tell(request, getRef());
+
+            final Object[] out = new ReceiveWhile<Object>(Object.class, duration("3 seconds")) {
+                @Override
+                protected Object match(Object msg) {
+                    if (msg instanceof FinishRequest) {
+                        return msg;
+                    }
+                    throw noMatch();
+                }
+            }.get();
+
+            Assert.assertTrue(Arrays.stream(out).anyMatch(c -> c instanceof FinishRequest));
+        }};
+    }
+
+    /**
+     * Performs an invalid health fund source HTTP request test
+     */
+    @Test
+    public void testInvalidHealthFundSourceHTTPRequest() throws Exception {
+        assertNotNull(configuration);
+
+        new JavaTestKit(system) {{
+            final ActorRef orchestrator = system.actorOf(Props.create(HealthFundSourcesOrchestrator.class, configuration));
+
+            InputStream stream = HealthFundSourcesOrchestratorTest.class.getClassLoader().getResourceAsStream("fund_source_invalid_request.json");
+
+            assertNotNull(stream);
+
+            MediatorHTTPRequest request = new MediatorHTTPRequest(
+                    getRef(),
+                    getRef(),
+                    "unit-test",
+                    "POST",
+                    "http",
+                    null,
+                    null,
+                    configuration.getProperty("elmis.health_fund_sources.path"),
                     IOUtils.toString(stream),
                     Collections.singletonMap("Content-Type", "application/json"),
                     Collections.emptyList()

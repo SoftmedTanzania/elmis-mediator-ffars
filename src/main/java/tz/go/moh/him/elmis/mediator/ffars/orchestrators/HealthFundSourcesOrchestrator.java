@@ -163,6 +163,8 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
      * @param msg to be sent
      */
     protected void sendDataToTargetSystem(String msg) {
+        log.debug("Forwarding request to eLMIS");
+
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 
@@ -212,5 +214,7 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
 
         ActorSelection httpConnector = getContext().actorSelection(config.userPathFor("http-connector"));
         httpConnector.tell(forwardToElmisRequest, getSelf());
+
+        log.debug("Request forwarded to eLMIS");
     }
 }

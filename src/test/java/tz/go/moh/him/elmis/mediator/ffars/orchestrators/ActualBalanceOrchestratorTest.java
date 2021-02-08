@@ -61,7 +61,7 @@ public class ActualBalanceOrchestratorTest extends BaseOrchestratorTest {
                     "http",
                     null,
                     null,
-                    configuration.getProperty("elmis.api.actual_balance.path"),
+                    configuration.getProperty("elmis.actual_balance.path"),
                     IOUtils.toString(stream),
                     Collections.singletonMap("Content-Type", "application/json"),
                     Collections.emptyList()
