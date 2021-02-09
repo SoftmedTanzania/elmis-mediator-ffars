@@ -9,6 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.codehaus.plexus.util.StringUtils;
 import org.json.JSONObject;
@@ -24,6 +25,7 @@ import tz.go.moh.him.mediator.core.domain.ResultDetail;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -173,12 +175,14 @@ public class ActualBalanceOrchestrator extends UntypedActor {
         log.debug("Forwarding request to eLMIS");
 
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
+        headers.put(HttpHeaders.CONTENT_TYPE, "application/json");
 
         String host;
         int port;
         String path;
         String scheme;
+        String username = "";
+        String password = "";
 
         if (config.getDynamicConfig().isEmpty()) {
             log.debug("Dynamic config is empty, using config from mediator.properties");
@@ -202,14 +206,18 @@ public class ActualBalanceOrchestrator extends UntypedActor {
             path = connectionProperties.getString("elmisActualBalancePath");
             scheme = connectionProperties.getString("elmisScheme");
 
-            String username = connectionProperties.getString("elmisUsername");
-            String password = connectionProperties.getString("elmisPassword");
+            if (connectionProperties.has("elmisUsername") && connectionProperties.has("elmisPassword")) {
+                username = connectionProperties.getString("elmisUsername");
+                password = connectionProperties.getString("elmisPassword");
 
-            // if we have a username and a password
-            // we want to add the username and password as the Basic Auth header in the HTTP request
-            if (username != null && !"".equals(username) && password != null && !"".equals(password))
-            {
-                headers.put("Authorization", "Basic " + Base64.encodeBase64URLSafeString((username + ":" + password).getBytes()));
+                // if we have a username and a password
+                // we want to add the username and password as the Basic Auth header in the HTTP request
+                if (username != null && !"".equals(username) && password != null && !"".equals(password)) {
+                    String auth = username + ":" + password;
+                    byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
+                    String authHeader = "Basic " + new String(encodedAuth);
+                    headers.put(HttpHeaders.AUTHORIZATION, authHeader);
+                }
             }
         }
 

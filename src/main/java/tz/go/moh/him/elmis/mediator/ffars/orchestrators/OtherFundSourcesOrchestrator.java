@@ -3,10 +3,12 @@ package tz.go.moh.him.elmis.mediator.ffars.orchestrators;
 import akka.actor.ActorSelection;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.http.HttpHeaders;
 import org.json.JSONObject;
 import org.openhim.mediator.engine.MediatorConfig;
 import org.openhim.mediator.engine.messages.MediatorHTTPRequest;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,12 +38,14 @@ public class OtherFundSourcesOrchestrator extends HealthFundSourcesOrchestrator 
         log.debug("Forwarding request to Epicor9");
 
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
+        headers.put(HttpHeaders.CONTENT_TYPE, "application/json");
 
         String host;
         int port;
         String path;
         String scheme;
+        String username = "";
+        String password = "";
 
         if (config.getDynamicConfig().isEmpty()) {
             log.debug("Dynamic config is empty, using config from mediator.properties");
@@ -65,14 +69,18 @@ public class OtherFundSourcesOrchestrator extends HealthFundSourcesOrchestrator 
             path = connectionProperties.getString("epicor9FundSourcesPath");
             scheme = connectionProperties.getString("epicor9Scheme");
 
-            String username = connectionProperties.getString("epicor9Username");
-            String password = connectionProperties.getString("epicor9Password");
+            if (connectionProperties.has("epicor9Username") && connectionProperties.has("epicor9Password")) {
+                username = connectionProperties.getString("epicor9Username");
+                password = connectionProperties.getString("epicor9Password");
 
-            // if we have a username and a password
-            // we want to add the username and password as the Basic Auth header in the HTTP request
-            if (username != null && !"".equals(username) && password != null && !"".equals(password))
-            {
-                headers.put("Authorization", "Basic " + Base64.encodeBase64URLSafeString((username + ":" + password).getBytes()));
+                // if we have a username and a password
+                // we want to add the username and password as the Basic Auth header in the HTTP request
+                if (username != null && !"".equals(username) && password != null && !"".equals(password)) {
+                    String auth = username + ":" + password;
+                    byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
+                    String authHeader = "Basic " + new String(encodedAuth);
+                    headers.put(HttpHeaders.AUTHORIZATION, authHeader);
+                }
             }
         }
 
