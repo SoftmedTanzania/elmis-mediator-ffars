@@ -216,8 +216,10 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
 
         List<Pair<String, String>> params = new ArrayList<>();
 
+        host = scheme + "://" + host + ":" + port + path;
+
         MediatorHTTPRequest forwardToElmisRequest = new MediatorHTTPRequest(
-                (originalRequest).getRequestHandler(), getSelf(), "Sending Health Fund Sources to eLMIS", "POST", scheme, host, port, path, msg, headers, params
+                (originalRequest).getRequestHandler(), getSelf(), "Sending Health Fund Sources to eLMIS", "POST", host, msg, headers, params
         );
 
         ActorSelection httpConnector = getContext().actorSelection(config.userPathFor("http-connector"));
