@@ -21,8 +21,8 @@
   ],
   "defaultChannelConfig": [
     {
-      "name": "eLMIS Actual Balance Channel",
-      "urlPattern": "^/actual_balance$",
+      "name": "FFARS - eLMIS Actual Balance Channel",
+      "urlPattern": "^/ffars-elmis-actual-balance$",
       "description": "An OpenHIM channel for handling sharing of Actual Balance data from FFARS to eLMIS.",
       "type": "http",
       "allow": [
@@ -43,8 +43,8 @@
       ]
     },
     {
-      "name": "eLMIS Health Fund Sources Channel",
-      "urlPattern": "^/health_fund_sources$",
+      "name": "FFARS - eLMIS Health Fund Sources Channel",
+      "urlPattern": "^/ffars-elmis-health-funds-sources$",
       "description": "An OpenHIM channel for handling sharing of Health Fund Sources from FFARS to eLMIS.",
       "type": "http",
       "allow": [
