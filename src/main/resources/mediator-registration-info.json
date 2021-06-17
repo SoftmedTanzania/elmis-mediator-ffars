@@ -1,7 +1,7 @@
 {
   "urn": "urn:uuid:ea6e9250-4fd7-11eb-a664-616443591cdc",
   "version": "0.1.0",
-  "name": "FFARS to eLMIS Mediator",
+  "name": "FFARS - eLMIS Mediator",
   "description": "An OpenHIM mediator for handling integration of data from FFARS to eLMIS systems",
   "endpoints": [
     {
