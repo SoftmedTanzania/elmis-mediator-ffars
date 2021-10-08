@@ -9,7 +9,6 @@ import org.openhim.mediator.engine.*;
 import tz.go.moh.him.elmis.mediator.ffars.orchestrators.ActualBalanceOrchestrator;
 import tz.go.moh.him.elmis.mediator.ffars.orchestrators.DefaultOrchestrator;
 import tz.go.moh.him.elmis.mediator.ffars.orchestrators.HealthFundSourcesOrchestrator;
-import tz.go.moh.him.elmis.mediator.ffars.orchestrators.OtherFundSourcesOrchestrator;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,9 +21,8 @@ public class MediatorMain {
         RoutingTable routingTable = new RoutingTable();
 
         routingTable.addRoute("/fund-sources-inbound", DefaultOrchestrator.class);
-        routingTable.addRoute("/elmis/actual_balance", ActualBalanceOrchestrator.class);
-        routingTable.addRoute("/elmis/health_fund_sources", HealthFundSourcesOrchestrator.class);
-        routingTable.addRoute("/epicor9/other_fund_sources", OtherFundSourcesOrchestrator.class);
+        routingTable.addRoute("/actual_balance", ActualBalanceOrchestrator.class);
+        routingTable.addRoute("/health_fund_sources", HealthFundSourcesOrchestrator.class);
 
         return routingTable;
     }

@@ -123,8 +123,8 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
 
     /**
      * Handles receiving OpenHIM Core messages into the mediator
-     * @param msg to be received
      *
+     * @param msg to be received
      * @throws Exception
      */
     @Override
@@ -136,7 +136,8 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
 
             FundSource fundSource = null;
             try {
-                Type domainType = new TypeToken<FundSource>() {}.getType();
+                Type domainType = new TypeToken<FundSource>() {
+                }.getType();
                 fundSource = new Gson().fromJson((originalRequest).getBody(), domainType);
             } catch (com.google.gson.JsonSyntaxException ex) {
                 errorMessages.add(new ErrorMessage(originalRequest.getBody(), Arrays.asList(new ResultDetail(ResultDetail.ResultsDetailsType.ERROR, errorMessageResource.getString("ERROR_INVALID_PAYLOAD"), null))));
@@ -160,12 +161,12 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
     }
 
     /**
-     * Handle sending of data to eLMIS
+     * Handle sending of data to Destination
      *
      * @param msg to be sent
      */
     protected void sendDataToTargetSystem(String msg) {
-        log.debug("Forwarding request to eLMIS");
+        log.debug("Forwarding request to destination");
 
         Map<String, String> headers = new HashMap<>();
         headers.put(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -180,11 +181,11 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
         if (config.getDynamicConfig().isEmpty()) {
             log.debug("Dynamic config is empty, using config from mediator.properties");
 
-            host = config.getProperty("elmis.host");
-            port = Integer.parseInt(config.getProperty("elmis.port"));
-            path = config.getProperty("elmis.health_fund_sources.path");
+            host = config.getProperty("destination.host");
+            port = Integer.parseInt(config.getProperty("destination.port"));
+            path = config.getProperty("destination.health_fund_sources.path");
 
-            if (config.getProperty("elmis.secure").equals("true")) {
+            if (config.getProperty("destination.secure").equals("true")) {
                 scheme = "https";
             } else {
                 scheme = "http";
@@ -192,16 +193,16 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
         } else {
             log.debug("Using dynamic config");
 
-            JSONObject connectionProperties = new JSONObject(config.getDynamicConfig()).getJSONObject("elmisConnectionProperties");
+            JSONObject connectionProperties = new JSONObject(config.getDynamicConfig()).getJSONObject("destinationConnectionProperties");
 
-            host = connectionProperties.getString("elmisHost");
-            port = connectionProperties.getInt("elmisPort");
-            path = connectionProperties.getString("elmisFundSourcesPath");
-            scheme = connectionProperties.getString("elmisScheme");
+            host = connectionProperties.getString("destinationHost");
+            port = connectionProperties.getInt("destinationPort");
+            path = connectionProperties.getString("destinationFundSourcesPath");
+            scheme = connectionProperties.getString("destinationScheme");
 
-            if (connectionProperties.has("elmisUsername") && connectionProperties.has("elmisPassword")) {
-                username = connectionProperties.getString("elmisUsername");
-                password = connectionProperties.getString("elmisPassword");
+            if (connectionProperties.has("destinationUsername") && connectionProperties.has("destinationPassword")) {
+                username = connectionProperties.getString("destinationUsername");
+                password = connectionProperties.getString("destinationPassword");
 
                 // if we have a username and a password
                 // we want to add the username and password as the Basic Auth header in the HTTP request
@@ -218,13 +219,13 @@ public class HealthFundSourcesOrchestrator extends UntypedActor {
 
         host = scheme + "://" + host + ":" + port + path;
 
-        MediatorHTTPRequest forwardToElmisRequest = new MediatorHTTPRequest(
-                (originalRequest).getRequestHandler(), getSelf(), "Sending Health Fund Sources to eLMIS", "POST", host, msg, headers, params
+        MediatorHTTPRequest forwardToDestinationRequest = new MediatorHTTPRequest(
+                (originalRequest).getRequestHandler(), getSelf(), "Sending Health Fund Sources to Destination", "POST", host, msg, headers, params
         );
 
         ActorSelection httpConnector = getContext().actorSelection(config.userPathFor("http-connector"));
-        httpConnector.tell(forwardToElmisRequest, getSelf());
+        httpConnector.tell(forwardToDestinationRequest, getSelf());
 
-        log.debug("Request forwarded to eLMIS");
+        log.debug("Request forwarded to Destination");
     }
 }
