@@ -8,14 +8,14 @@
       "name": "eLMIS Actual Balance Route",
       "host": "localhost",
       "port": "3002",
-      "path": "/elmis/actual_balance",
+      "path": "/actual_balance",
       "type": "http"
     },
     {
       "name": "eLMIS Health Fund Sources Route",
       "host": "localhost",
       "port": "3002",
-      "path": "/elmis/health_fund_sources",
+      "path": "/health_fund_sources",
       "type": "http"
     }
   ],
@@ -36,7 +36,7 @@
           "name": "eLMIS Actual Balance Route",
           "host": "localhost",
           "port": "3002",
-          "path": "/elmis/actual_balance",
+          "path": "/actual_balance",
           "type": "http",
           "primary": "true"
         }
@@ -58,7 +58,7 @@
           "name": "eLMIS Health Fund Sources Route",
           "host": "localhost",
           "port": "3002",
-          "path": "/elmis/health_fund_sources",
+          "path": "/health_fund_sources",
           "type": "http",
           "primary": "true"
         }
@@ -67,37 +67,37 @@
   ],
   "configDefs": [
     {
-      "param": "elmisConnectionProperties",
+      "param": "destinationConnectionProperties",
       "displayName": "eLMIS Connection Properties",
       "description": "Configuration to set the hostname, port and path for the eLMIS server",
       "type": "struct",
       "template": [
         {
-          "param": "elmisHost",
+          "param": "destinationHost",
           "displayName": "eLMIS Host Name",
           "description": "IP address/hostname of the eLMIS server. e.g 192.168.1.1",
           "type": "string"
         },
         {
-          "param": "elmisPort",
+          "param": "destinationPort",
           "displayName": "eLMIS Port Number",
           "description": "The port number of the eLMIS server. e.g 8080",
           "type": "number"
         },
         {
-          "param": "elmisActualBalancePath",
+          "param": "destinationActualBalancePath",
           "displayName": "eLMIS Actual Balance Path",
-          "description": "The eLMIS server's Actual Balance path for receiving of data from the HIM. eg /elmis",
+          "description": "The eLMIS server's Actual Balance path for receiving of data from the HIM. eg /destination",
           "type": "string"
         },
         {
-          "param": "elmisFundSourcesPath",
+          "param": "destinationFundSourcesPath",
           "displayName": "eLMIS Health Fund Sources Path",
-          "description": "The eLMIS server's Health Fund Sources path for receiving of data from the HIM. eg /elmis",
+          "description": "The eLMIS server's Health Fund Sources path for receiving of data from the HIM. eg /destination",
           "type": "string"
         },
         {
-          "param": "elmisScheme",
+          "param": "destinationScheme",
           "displayName": "eLMIS Scheme",
           "description": "Whether the eLMIS server is using HTTP or HTTPS requests",
           "type": "option",
@@ -107,13 +107,13 @@
           ]
         },
         {
-          "param": "elmisUsername",
+          "param": "destinationUsername",
           "displayName": "eLMIS Username",
           "description": "The eLMIS server's username for receiving data from the HIM.",
           "type": "string"
         },
         {
-          "param": "elmisPassword",
+          "param": "destinationPassword",
           "displayName": "eLMIS Password",
           "description": "The eLMIS server' password for receiving data from the HIM.",
           "type": "password"
