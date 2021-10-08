@@ -1,0 +1,17 @@
+{
+  "ACTUAL_BALANCE_ERROR_MESSAGES": {
+    "ERROR_INVALID_PAYLOAD": "Error the payload is invalid",
+    "UID_IS_BLANK": "Validation failed. UID must not be blank",
+    "FACILITY_CODE_IS_BLANK": "Validation failed. facilityCode must not be blank",
+    "PERIOD_START_DATE_IS_BLANK": "Validation failed. periodStartDate must not be blank",
+    "SOURCE_APPLICATION_IS_BLANK": "Validation failed. sourceApplication must not be blank",
+    "FUNDING_SOURCE_CODE_IS_BLANK": "Validation failed. fundSourceCode must not be blank"
+  },
+  "FUND_SOURCES_ERROR_MESSAGES": {
+    "ERROR_INVALID_PAYLOAD": "Error the payload is invalid",
+    "NAME_IS_BLANK": "Validation failed. name must not be blank",
+    "CODE_IS_BLANK": "Validation failed. code must not be blank",
+    "DISPLAY_ORDER_IS_BLANK": "Validation failed. displayOrder must not be blank",
+    "LAST_UPDATE_IS_BLANK": "Validation failed. lastUpdate must not be blank"
+  }
+}

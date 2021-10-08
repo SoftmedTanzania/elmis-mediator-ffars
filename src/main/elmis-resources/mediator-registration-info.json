@@ -1,0 +1,124 @@
+{
+  "urn": "urn:uuid:ea6e9250-4fd7-11eb-a664-616443591cdc",
+  "version": "0.1.0",
+  "name": "FFARS - eLMIS Mediator",
+  "description": "An OpenHIM mediator for handling integration of data from FFARS to eLMIS systems",
+  "endpoints": [
+    {
+      "name": "eLMIS Actual Balance Route",
+      "host": "localhost",
+      "port": "3002",
+      "path": "/actual_balance",
+      "type": "http"
+    },
+    {
+      "name": "eLMIS Health Fund Sources Route",
+      "host": "localhost",
+      "port": "3002",
+      "path": "/health_fund_sources",
+      "type": "http"
+    }
+  ],
+  "defaultChannelConfig": [
+    {
+      "name": "FFARS - eLMIS Actual Balance Channel",
+      "urlPattern": "^/ffars-elmis-actual-balance$",
+      "description": "An OpenHIM channel for handling sharing of Actual Balance data from FFARS to eLMIS.",
+      "type": "http",
+      "allow": [
+        "ffars-role"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "routes": [
+        {
+          "name": "eLMIS Actual Balance Route",
+          "host": "localhost",
+          "port": "3002",
+          "path": "/actual_balance",
+          "type": "http",
+          "primary": "true"
+        }
+      ]
+    },
+    {
+      "name": "FFARS - eLMIS Health Fund Sources Channel",
+      "urlPattern": "^/ffars-elmis-health-funds-sources$",
+      "description": "An OpenHIM channel for handling sharing of Health Fund Sources from FFARS to eLMIS.",
+      "type": "http",
+      "allow": [
+        "ffars-role"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "routes": [
+        {
+          "name": "eLMIS Health Fund Sources Route",
+          "host": "localhost",
+          "port": "3002",
+          "path": "/health_fund_sources",
+          "type": "http",
+          "primary": "true"
+        }
+      ]
+    }
+  ],
+  "configDefs": [
+    {
+      "param": "destinationConnectionProperties",
+      "displayName": "eLMIS Connection Properties",
+      "description": "Configuration to set the hostname, port and path for the eLMIS server",
+      "type": "struct",
+      "template": [
+        {
+          "param": "destinationHost",
+          "displayName": "eLMIS Host Name",
+          "description": "IP address/hostname of the eLMIS server. e.g 192.168.1.1",
+          "type": "string"
+        },
+        {
+          "param": "destinationPort",
+          "displayName": "eLMIS Port Number",
+          "description": "The port number of the eLMIS server. e.g 8080",
+          "type": "number"
+        },
+        {
+          "param": "destinationActualBalancePath",
+          "displayName": "eLMIS Actual Balance Path",
+          "description": "The eLMIS server's Actual Balance path for receiving of data from the HIM. eg /destination",
+          "type": "string"
+        },
+        {
+          "param": "destinationFundSourcesPath",
+          "displayName": "eLMIS Health Fund Sources Path",
+          "description": "The eLMIS server's Health Fund Sources path for receiving of data from the HIM. eg /destination",
+          "type": "string"
+        },
+        {
+          "param": "destinationScheme",
+          "displayName": "eLMIS Scheme",
+          "description": "Whether the eLMIS server is using HTTP or HTTPS requests",
+          "type": "option",
+          "values": [
+            "http",
+            "https"
+          ]
+        },
+        {
+          "param": "destinationUsername",
+          "displayName": "eLMIS Username",
+          "description": "The eLMIS server's username for receiving data from the HIM.",
+          "type": "string"
+        },
+        {
+          "param": "destinationPassword",
+          "displayName": "eLMIS Password",
+          "description": "The eLMIS server' password for receiving data from the HIM.",
+          "type": "password"
+        }
+      ]
+    }
+  ]
+}
