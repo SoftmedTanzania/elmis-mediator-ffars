@@ -5,8 +5,8 @@ import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import com.google.gson.Gson;
-import org.apache.commons.codec.binary.Base64;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.HttpHeaders;
@@ -129,8 +129,8 @@ public class ActualBalanceOrchestrator extends UntypedActor {
 
     /**
      * Handles receiving OpenHIM Core messages into the mediator
-     * @param msg to be received
      *
+     * @param msg to be received
      * @throws Exception
      */
     @Override
@@ -187,11 +187,11 @@ public class ActualBalanceOrchestrator extends UntypedActor {
         if (config.getDynamicConfig().isEmpty()) {
             log.debug("Dynamic config is empty, using config from mediator.properties");
 
-            host = config.getProperty("elmis.host");
-            port = Integer.parseInt(config.getProperty("elmis.port"));
-            path = config.getProperty("elmis.actual_balance.path");
+            host = config.getProperty("destination.host");
+            port = Integer.parseInt(config.getProperty("destination.port"));
+            path = config.getProperty("destination.actual_balance.path");
 
-            if (config.getProperty("elmis.secure").equals("true")) {
+            if (config.getProperty("destination.secure").equals("true")) {
                 scheme = "https";
             } else {
                 scheme = "http";
@@ -199,16 +199,16 @@ public class ActualBalanceOrchestrator extends UntypedActor {
         } else {
             log.debug("Using dynamic config");
 
-            JSONObject connectionProperties = new JSONObject(config.getDynamicConfig()).getJSONObject("elmisConnectionProperties");
+            JSONObject connectionProperties = new JSONObject(config.getDynamicConfig()).getJSONObject("destinationConnectionProperties");
 
-            host = connectionProperties.getString("elmisHost");
-            port = connectionProperties.getInt("elmisPort");
-            path = connectionProperties.getString("elmisActualBalancePath");
-            scheme = connectionProperties.getString("elmisScheme");
+            host = connectionProperties.getString("destinationHost");
+            port = connectionProperties.getInt("destinationPort");
+            path = connectionProperties.getString("destinationActualBalancePath");
+            scheme = connectionProperties.getString("destinationScheme");
 
-            if (connectionProperties.has("elmisUsername") && connectionProperties.has("elmisPassword")) {
-                username = connectionProperties.getString("elmisUsername");
-                password = connectionProperties.getString("elmisPassword");
+            if (connectionProperties.has("destinationUsername") && connectionProperties.has("destinationPassword")) {
+                username = connectionProperties.getString("destinationUsername");
+                password = connectionProperties.getString("destinationPassword");
 
                 // if we have a username and a password
                 // we want to add the username and password as the Basic Auth header in the HTTP request
@@ -226,12 +226,12 @@ public class ActualBalanceOrchestrator extends UntypedActor {
         host = scheme + "://" + host + ":" + port + path;
 
         MediatorHTTPRequest forwardToElmisRequest = new MediatorHTTPRequest(
-                (originalRequest).getRequestHandler(), getSelf(), "Sending Actual Balance to eLMIS", "POST", host, msg, headers, params
+                (originalRequest).getRequestHandler(), getSelf(), "Sending Actual Balance to destination", "POST", host, msg, headers, params
         );
 
         ActorSelection httpConnector = getContext().actorSelection(config.userPathFor("http-connector"));
         httpConnector.tell(forwardToElmisRequest, getSelf());
 
-        log.debug("Request forwarded to eLMIS");
+        log.debug("Request forwarded to Destination");
     }
 }

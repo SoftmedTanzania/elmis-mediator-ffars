@@ -1,0 +1,89 @@
+{
+  "urn": "urn:uuid:ea6e9250-4fd7-11eb-a664-616443591cdc",
+  "version": "0.1.0",
+  "name": "FFARS - Epicor Mediator",
+  "description": "An OpenHIM mediator for handling integration of data from FFARS to Epicor systems",
+  "endpoints": [
+    {
+      "name": "Epicor Health Fund Sources Route",
+      "host": "localhost",
+      "port": "3013",
+      "path": "/health_fund_sources",
+      "type": "http"
+    }
+  ],
+  "defaultChannelConfig": [
+    {
+      "name": "FFARS - Epicor Health Fund Sources Channel",
+      "urlPattern": "^/ffars-epicor-health-funds-sources$",
+      "description": "An OpenHIM channel for handling sharing of Health Fund Sources from FFARS to Epicor.",
+      "type": "http",
+      "allow": [
+        "ffars-role"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "routes": [
+        {
+          "name": "Epicor Health Fund Sources Route",
+          "host": "localhost",
+          "port": "3013",
+          "path": "/health_fund_sources",
+          "type": "http",
+          "primary": "true"
+        }
+      ]
+    }
+  ],
+  "configDefs": [
+    {
+      "param": "destinationConnectionProperties",
+      "displayName": "Epicor Connection Properties",
+      "description": "Configuration to set the hostname, port and path for the Epicor server",
+      "type": "struct",
+      "template": [
+        {
+          "param": "destinationHost",
+          "displayName": "Epicor Host Name",
+          "description": "IP address/hostname of the Epicor server. e.g 192.168.1.1",
+          "type": "string"
+        },
+        {
+          "param": "destinationPort",
+          "displayName": "Epicor Port Number",
+          "description": "The port number of the Epicor server. e.g 8080",
+          "type": "number"
+        },
+        {
+          "param": "destinationFundSourcesPath",
+          "displayName": "Epicor Health Fund Sources Path",
+          "description": "The Epicor server's Health Fund Sources path for receiving of data from the HIM. eg /destination",
+          "type": "string"
+        },
+        {
+          "param": "destinationScheme",
+          "displayName": "Epicor Scheme",
+          "description": "Whether the Epicor server is using HTTP or HTTPS requests",
+          "type": "option",
+          "values": [
+            "http",
+            "https"
+          ]
+        },
+        {
+          "param": "destinationUsername",
+          "displayName": "Epicor Username",
+          "description": "The Epicor server's username for receiving data from the HIM.",
+          "type": "string"
+        },
+        {
+          "param": "destinationPassword",
+          "displayName": "Epicor Password",
+          "description": "The Epicor server' password for receiving data from the HIM.",
+          "type": "password"
+        }
+      ]
+    }
+  ]
+}

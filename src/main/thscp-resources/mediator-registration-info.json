@@ -1,0 +1,89 @@
+{
+  "urn": "urn:uuid:fbefc7d7-5296-481d-835d-f81a0ccab999",
+  "version": "0.1.0",
+  "name": "FFARS - THSCP Mediator",
+  "description": "An OpenHIM mediator for handling integration of data from FFARS to THSCP systems",
+  "endpoints": [
+    {
+      "name": "THSCP Health Fund Sources Route",
+      "host": "localhost",
+      "port": "3101",
+      "path": "/health_fund_sources",
+      "type": "http"
+    }
+  ],
+  "defaultChannelConfig": [
+    {
+      "name": "FFARS - THSCP Health Fund Sources Channel",
+      "urlPattern": "^/ffars-thscp-health-funds-sources$",
+      "description": "An OpenHIM channel for handling sharing of Health Fund Sources from FFARS to THSCP.",
+      "type": "http",
+      "allow": [
+        "ffars-role"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "routes": [
+        {
+          "name": "THSCP Health Fund Sources Route",
+          "host": "localhost",
+          "port": "3101",
+          "path": "/health_fund_sources",
+          "type": "http",
+          "primary": "true"
+        }
+      ]
+    }
+  ],
+  "configDefs": [
+    {
+      "param": "destinationConnectionProperties",
+      "displayName": "THSCP Connection Properties",
+      "description": "Configuration to set the hostname, port and path for the THSCP server",
+      "type": "struct",
+      "template": [
+        {
+          "param": "destinationHost",
+          "displayName": "THSCP Host Name",
+          "description": "IP address/hostname of the THSCP server. e.g 192.168.1.1",
+          "type": "string"
+        },
+        {
+          "param": "destinationPort",
+          "displayName": "THSCP Port Number",
+          "description": "The port number of the THSCP server. e.g 8080",
+          "type": "number"
+        },
+        {
+          "param": "destinationFundSourcesPath",
+          "displayName": "THSCP Health Fund Sources Path",
+          "description": "The THSCP server's Health Fund Sources path for receiving of data from the HIM. eg /destination",
+          "type": "string"
+        },
+        {
+          "param": "destinationScheme",
+          "displayName": "THSCP Scheme",
+          "description": "Whether the THSCP server is using HTTP or HTTPS requests",
+          "type": "option",
+          "values": [
+            "http",
+            "https"
+          ]
+        },
+        {
+          "param": "destinationUsername",
+          "displayName": "THSCP Username",
+          "description": "The THSCP server's username for receiving data from the HIM.",
+          "type": "string"
+        },
+        {
+          "param": "destinationPassword",
+          "displayName": "THSCP Password",
+          "description": "The THSCP server' password for receiving data from the HIM.",
+          "type": "password"
+        }
+      ]
+    }
+  ]
+}
